@@ -10,7 +10,13 @@ import (
 // if the error is a valid it will log it
 func ErrCheck(err error, exit bool) {
 	if err != nil {
-		log.Println(err, "\n", string(debug.Stack()))
+		msg := err.Error()
+
+		if stack := os.Getenv("DUMP_STACK"); stack == "true" {
+			msg += "\n" + string(debug.Stack())
+		}
+
+		log.Println(msg)
 
 		if exit {
 			os.Exit(1)
